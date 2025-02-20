@@ -3,45 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chúc mừng sinh nhật!</title>
+    <title>Chúc Mừng Sinh Nhật</title>
     <style>
         body {
             text-align: center;
-            background-color: #f0f8ff;
+            background-color: black;
+            color: white;
             font-family: Arial, sans-serif;
         }
         h1 {
-            color: #ff69b4;
+            font-size: 2em;
+            color: #ffcc00;
+        }
+        .input-container {
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #ff4500;
+        }
+        .hidden {
+            display: none;
+        }
+        #birthday-card {
+            margin-top: 30px;
         }
         #cake {
-            width: 300px;
-            margin-top: 20px;
+            width: 200px;
+            margin-top: 10px;
         }
         .fireworks {
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
+            top: 0;
+            left: 0;
             pointer-events: none;
+            z-index: -1;
         }
     </style>
 </head>
 <body>
-    <h1>Chúc mừng sinh nhật!</h1>
-    <p id="message"></p>
-    <img id="cake" src="URL_HINH_BANH_KEM" alt="Bánh sinh nhật">
-    <div class="fireworks"></div>
-    <script>
-        // Lấy tên người nhận từ URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const name = urlParams.get('name') || 'Bạn';
-        const age = 20; // Tuổi của người nhận
-        const message = `Chúc ${name} bước sang tuổi ${age} ngày càng xinh đẹp, luôn học giỏi và gặp nhiều may mắn!`;
-        document.getElementById('message').innerText = message;
+    <h1>🎉 Nhập tên để nhận lời chúc sinh nhật 🎂</h1>
+    <div class="input-container">
+        <input type="text" id="nameInput" placeholder="Nhập tên của bạn...">
+        <button onclick="showBirthdayMessage()">Nhận lời chúc</button>
+    </div>
 
-        // Hiệu ứng pháo hoa (sử dụng thư viện bên ngoài nếu cần)
-        // Ví dụ: https://codepen.io/anon/pen/rjaJpG
+    <div id="birthday-card" class="hidden">
+        <h2 id="greeting"></h2>
+        <img id="cake" src="https://i.imgur.com/9t5Pbxw.png" alt="Bánh sinh nhật">
+        <p id="wish"></p>
+    </div>
+
+    <canvas class="fireworks"></canvas>
+
+    <script>
+        function showBirthdayMessage() {
+            let name = document.getElementById("nameInput").value.trim();
+            if (name === "") {
+                alert("Vui lòng nhập tên!");
+                return;
+            }
+            
+            document.getElementById("greeting").innerHTML = `🎉 Chúc mừng sinh nhật ${name}! 🎂`;
+            document.getElementById("wish").innerHTML = `Chúc ${name} một tuổi mới ngày càng xinh đẹp, luôn học giỏi và gặp nhiều may mắn! 🎁🎈`;
+            document.getElementById("birthday-card").classList.remove("hidden");
+
+            startFireworks();
+        }
+
+        function startFireworks() {
+            const canvas = document.querySelector('.fireworks');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+
+            class Particle {
+                constructor(x, y, color, size, speedX, speedY) {
+                    this.x = x;
+                    this.y = y;
+                    this.color = color;
+                    this.size = size;
+                    this.speedX = speedX;
+                    this.speedY = speedY;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.size -= 0.02;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+
+            function createFirework() {
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height / 2;
+                let colors = ["red", "yellow", "blue", "green", "purple", "orange"];
+                let color = colors[Math.floor(Math.random() * colors.length)];
+                
+                for (let i = 0; i < 50; i++) {
+                    let speedX = (Math.random() - 0.5) * 4;
+                    let speedY = (Math.random() - 0.5) * 4;
+                    let size = Math.random() * 3 + 1;
+                    particles.push(new Particle(x, y, color, size, speedX, speedY));
+                }
+            }
+
+            function animateFireworks() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((particle, index) => {
+                    particle.update();
+                    particle.draw();
+                    if (particle.size <= 0) {
+                        particles.splice(index, 1);
+                    }
+                });
+                requestAnimationFrame(animateFireworks);
+            }
+
+            setInterval(createFirework, 1000);
+            animateFireworks();
+        }
     </script>
 </body>
 </html>
