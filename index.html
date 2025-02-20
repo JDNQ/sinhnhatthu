@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc mừng sinh nhật!</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #ff69b4;
+        }
+        #cake {
+            width: 300px;
+            margin-top: 20px;
+        }
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chúc mừng sinh nhật!</h1>
+    <p id="message"></p>
+    <img id="cake" src="URL_HINH_BANH_KEM" alt="Bánh sinh nhật">
+    <div class="fireworks"></div>
+    <script>
+        // Lấy tên người nhận từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name') || 'Bạn';
+        const age = 20; // Tuổi của người nhận
+        const message = `Chúc ${name} bước sang tuổi ${age} ngày càng xinh đẹp, luôn học giỏi và gặp nhiều may mắn!`;
+        document.getElementById('message').innerText = message;
+
+        // Hiệu ứng pháo hoa (sử dụng thư viện bên ngoài nếu cần)
+        // Ví dụ: https://codepen.io/anon/pen/rjaJpG
+    </script>
+</body>
+</html>
